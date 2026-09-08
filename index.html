@@ -44,7 +44,7 @@
   }
   .progress-label{display:flex; justify-content:space-between; font-size:.8rem; color:var(--ink-muted); margin-bottom:8px; font-family:'IBM Plex Mono',monospace;}
   .progress-bar{height:8px; background:var(--surface-2); border-radius:99px; overflow:hidden;}
-  .progress-fill{height:100%; background:var(--accent); border-radius:99px; transition:width .3s;}
+  .progress-fill{height:100%; width:100%; background:var(--accent); border-radius:99px; transform-origin:left; transform:scaleX(0); transition:transform .3s;}
 
   .season{margin-bottom:32px;}
   .season h2{
@@ -95,7 +95,7 @@
 
   <div class="progress-wrap">
     <div class="progress-label"><span id="progressText">0 / 0 ouvidos</span><span id="progressPct">0%</span></div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </div>
 
   <div id="seasons"></div>
@@ -219,7 +219,7 @@
     var pct = totalEps ? Math.round((done/totalEps)*100) : 0;
     document.getElementById('progressText').textContent = done+' / '+totalEps+' ouvidos';
     document.getElementById('progressPct').textContent = pct+'%';
-    document.getElementById('progressFill').style.width = pct+'%';
+    document.getElementById('progressFill').style.transform = 'scaleX('+(pct/100)+')';
   }
 
   seasonsEl.addEventListener('click', function(e){
