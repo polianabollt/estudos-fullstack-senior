@@ -9,9 +9,11 @@
 
 ```
 estudos/
+├── index.html                  ← painel de podcast (GitHub Pages) — player + progresso
 ├── plan.md                     ← índice geral: sprint de estudo, checklist, status por área
 ├── podcast.md                  ← índice de episódios/roteiros de áudio
 ├── constitution.md             ← este arquivo
+├── .gitignore                  ← mantém arquivos pessoais fora do repo público (ver Regra 9)
 ├── 00-logica-algoritmos/
 ├── 01-backend/
 │   ├── node/
@@ -89,6 +91,17 @@ O podcast **não lê a aula em voz alta** — ele é complementar, pensado pra s
 - Fecha com **a pergunta da mini-prova daquela seção em voz alta**, pra reforço por recall ativo (ela responde mentalmente andando), não releitura passiva
 - Reaproveita o mesmo truque de memorização da aula como gancho de fechamento, pra criar reforço espaçado entre o que foi lido (aula) e o que foi ouvido (podcast) sobre o mesmo conceito
 
+## 🧭 Regra 9 — Painel de podcast (GitHub Pages) e fluxo de publicação
+
+O repositório é público no GitHub (`polianabollt/estudos-fullstack-senior`), com GitHub Pages ativo servindo `index.html` da raiz em `https://polianabollt.github.io/estudos-fullstack-senior/`. É um painel estático — sem servidor, sem build — com player de áudio por episódio e progresso salvo em `localStorage` do celular.
+
+- **Artifact não hospeda áudio de verdade** — testado em 2026-09-08: a capacidade de assets não está disponível, e a política de segurança do Artifact bloqueia tocar mídia de qualquer host externo. Por isso o player mora no GitHub Pages, não num Artifact.
+- Todo `.m4a` gerado vai direto na mesma pasta do roteiro correspondente (ex: `00-logica-algoritmos/podcast/ep1-big-o.m4a` ao lado de `ep1-big-o.md`)
+- Ao adicionar um `.m4a` novo (ou um roteiro novo), atualizar a entrada correspondente no array `DATA` do `index.html` (campo `audio` e/ou `roteiro`)
+- **Fluxo de publicação:** depois de adicionar/editar arquivos → `git add -A` → `git commit -m "..."` → `git push` → o GitHub Pages atualiza sozinho em menos de 1 minuto, mesmo link
+- **Arquivos pessoais fora do escopo de estudo** (ex: `Cases.docx` com informação de cliente) ficam de fora via `.gitignore` — nunca versionar algo assim num repo público sem confirmar antes
+- O progresso ("ouvido"/"não ouvido") é local por aparelho — não sincroniza entre celular e computador. Se isso incomodar no futuro, a alternativa é usar a capacidade `db` de um Artifact separado só pra tracking (não pro áudio)
+
 ---
 
 ## 🗳️ Decisões já tomadas (não relitigar sem novo motivo)
@@ -96,3 +109,4 @@ O podcast **não lê a aula em voz alta** — ele é complementar, pensado pra s
 - Testes unitários vivem com a linguagem; testes como disciplina (e2e, TDD, estratégia) têm pasta própria — decidido em 2026-09-08
 - Backend dividido por linguagem (node/python/php) desde o início, porque são usadas ativamente no trabalho real
 - IA (Bedrock/LangGraph/MCP) tem pasta separada do backend, porque é tratada como diferencial de carreira, não como "só mais uma tech" do dia a dia
+- Painel de podcast vive em GitHub Pages (repo público), não em Artifact — decidido em 2026-09-08 depois de confirmar que Artifact não consegue tocar áudio real nesta conta
