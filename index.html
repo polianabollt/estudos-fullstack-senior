@@ -47,11 +47,18 @@
   .progress-fill{height:100%; width:100%; background:var(--accent); border-radius:99px; transform-origin:left; transform:scaleX(0); transition:transform .3s;}
 
   .season{margin-bottom:32px;}
-  .season h2{
-    font-family:'Sora',sans-serif; font-size:1.05rem; font-weight:700;
+  .season-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;
     margin:0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--border);
   }
+  .season h2{font-family:'Sora',sans-serif; font-size:1.05rem; font-weight:700; margin:0;}
   .season .folder{font-size:.78rem; color:var(--ink-muted); font-weight:400; font-family:'IBM Plex Mono',monospace;}
+  .aula-link{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; font-weight:600;
+    color:var(--accent-ink); background:var(--accent-soft); text-decoration:none;
+    padding:5px 11px; border-radius:99px; white-space:nowrap; flex:0 0 auto;
+  }
+  .aula-link.pending{color:var(--pending); background:var(--pending-soft); pointer-events:none;}
 
   .ep{
     background:var(--surface); border:1px solid var(--border); border-radius:12px;
@@ -108,6 +115,7 @@
     {
       season: "Temporada 1 — Módulo 00: Lógica & Algoritmos",
       folder: "00-logica-algoritmos/podcast/",
+      artifactUrl: "https://claude.ai/code/artifact/fdc96ffa-995a-436b-8d71-0deab1f02103",
       episodes: [
         { id: "ep1", title: "Complexidade (Big O)", audio: "00-logica-algoritmos/podcast/ep1-big-o.m4a", roteiro: "00-logica-algoritmos/podcast/ep1-big-o.md" },
         { id: "ep2", title: "Arrays, listas encadeadas, pilhas e filas", audio: "00-logica-algoritmos/podcast/ep2-arrays-pilhas-filas.m4a", roteiro: "00-logica-algoritmos/podcast/ep2-arrays-pilhas-filas.md" },
@@ -121,6 +129,7 @@
     {
       season: "Temporada 2 — Módulo 01: Backend & dados",
       folder: "01-backend/ e 03-sql-dados/",
+      artifactUrl: null,
       episodes: [
         { id: "ep8", title: "REST de verdade: verbos, status codes e idempotência", audio: null, roteiro: null },
         { id: "ep9", title: "JWT vs. sessão", audio: null, roteiro: null },
@@ -133,6 +142,7 @@
     {
       season: "Temporada 3 — Módulo 02: Frontend & arquitetura",
       folder: "02-frontend/",
+      artifactUrl: null,
       episodes: [
         { id: "ep14", title: "Closures em JavaScript", audio: null, roteiro: null },
         { id: "ep15", title: "Event loop", audio: null, roteiro: null },
@@ -147,6 +157,7 @@
     {
       season: "Temporada 4 — Módulo 07: Comportamental",
       folder: "07-comportamental/",
+      artifactUrl: null,
       episodes: [
         { id: "ep22", title: "Método STAR", audio: null, roteiro: null },
         { id: "ep23", title: "Por que quer sair do emprego atual", audio: null, roteiro: null },
@@ -157,6 +168,7 @@
     {
       season: "Temporada bônus — Módulo 06: AWS CLF-C02",
       folder: "06-aws/",
+      artifactUrl: null,
       episodes: [
         { id: "ep26", title: "Responsabilidade compartilhada", audio: null, roteiro: null },
         { id: "ep27", title: "EC2, S3, RDS, Lambda", audio: null, roteiro: null },
@@ -182,7 +194,14 @@
   DATA.forEach(function(season){
     var sEl = document.createElement('div');
     sEl.className = 'season';
-    sEl.innerHTML = '<h2>'+season.season+' <span class="folder">'+season.folder+'</span></h2>';
+    var aulaLink = season.artifactUrl
+      ? '<a class="aula-link" href="'+season.artifactUrl+'" target="_blank" rel="noopener">📖 ver aula completa</a>'
+      : '<span class="aula-link pending">📖 aula pendente</span>';
+    sEl.innerHTML =
+      '<div class="season-head">' +
+        '<h2>'+season.season+' <span class="folder">'+season.folder+'</span></h2>' +
+        aulaLink +
+      '</div>';
 
     season.episodes.forEach(function(ep){
       totalEps++;
