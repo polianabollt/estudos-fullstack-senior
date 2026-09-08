@@ -76,6 +76,7 @@ Todo módulo (pasta numerada) que virar artifact de estudo segue este molde, val
 1. **Hero** — título do módulo + por que isso cai em prova/entrevista
 2. **Índice (TOC)** com âncoras, numerado, cada item = 1 episódio futuro de podcast
 3. **Seções em ordem de estudo**, cada uma com: explicação direta → exemplo de código real (quando aplicável) → box "🧠 truque" de memorização → exercício em `<details>` com resposta escondida → linha "Pratique em:" com sugestão concreta
+3.1. **Checkpoint de live code a cada 4 seções/episódios** — bloco "💻 Live code" com 1 desafio de código, campo de texto pra ela escrever a solução do zero, e um botão que pede feedback ao Claude via capacidade `sample` (declarar `capabilities:{sample:{}}` no publish). O prompt enviado pede avaliação em até 8 linhas, em português, e proíbe reescrever a solução inteira — só aponta o erro/melhoria, preservando o aprendizado ativo. Sempre tratar `sampleAPI === null` (recurso indisponível nessa visualização) com mensagem clara em vez de travar
 4. **Checklist final** de autoavaliação livre ("consigo explicar X de cabeça")
 5. **Mini-prova final obrigatória** — 8 questões de múltipla escolha (uma por conceito-chave da seção correspondente), correção via JS mostrando certo/errado + explicação por questão, resultado com corte de aprovação (referência usada: 6/8) liberando o próximo módulo
 6. Mesma identidade visual entre módulos: paleta teal/âmbar, fontes Sora (títulos) + IBM Plex Sans (corpo) + IBM Plex Mono (código/labels), dark mode automático
