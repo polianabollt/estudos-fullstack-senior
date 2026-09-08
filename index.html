@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Podcast — Estudos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --bg:#f4f6f5; --surface:#ffffff; --surface-2:#eceef0; --border:#d9ddd8;
+    --ink:#17211f; --ink-muted:#56635e;
+    --accent:#1f6f66; --accent-ink:#0e433d; --accent-soft:#e4efec;
+    --accent2:#c8712f; --accent2-soft:#fbe9d8;
+    --done:#3f7d4f; --done-soft:#e2efe2;
+    --pending:#8a8f8c; --pending-soft:#e9ebe9;
+    --shadow: 0 1px 2px rgba(23,33,31,.06), 0 8px 24px -12px rgba(23,33,31,.15);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#101614; --surface:#161f1d; --surface-2:#1d2725; --border:#2a3533;
+      --ink:#e7ece9; --ink-muted:#9aa8a2;
+      --accent:#5fb8ac; --accent-ink:#a9e3da; --accent-soft:#1c3330;
+      --accent2:#e8975a; --accent2-soft:#33251a;
+      --done:#7cc08a; --done-soft:#1d2c1f;
+      --pending:#6b7570; --pending-soft:#1a201e;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif; line-height:1.5;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:28px 18px 80px;}
+  h1{font-family:'Sora',sans-serif; font-size:1.6rem; font-weight:800; margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  header{margin-bottom:8px;}
+  header p{color:var(--ink-muted); font-size:.9rem; margin:6px 0 0;}
+
+  .progress-wrap{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:14px 18px; margin:18px 0 28px; box-shadow:var(--shadow);
+  }
+  .progress-label{display:flex; justify-content:space-between; font-size:.8rem; color:var(--ink-muted); margin-bottom:8px; font-family:'IBM Plex Mono',monospace;}
+  .progress-bar{height:8px; background:var(--surface-2); border-radius:99px; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--accent); border-radius:99px; transition:width .3s;}
+
+  .season{margin-bottom:32px;}
+  .season h2{
+    font-family:'Sora',sans-serif; font-size:1.05rem; font-weight:700;
+    margin:0 0 10px; padding-bottom:8px; border-bottom:1px solid var(--border);
+  }
+  .season .folder{font-size:.78rem; color:var(--ink-muted); font-weight:400; font-family:'IBM Plex Mono',monospace;}
+
+  .ep{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; margin-bottom:10px; box-shadow:var(--shadow);
+  }
+  .ep-top{display:flex; align-items:flex-start; gap:10px; justify-content:space-between;}
+  .ep-title{font-size:.92rem; font-weight:600; flex:1;}
+  .ep-num{font-family:'IBM Plex Mono',monospace; color:var(--accent); margin-right:6px;}
+
+  .badge{
+    font-family:'IBM Plex Mono',monospace; font-size:.68rem; font-weight:600;
+    padding:3px 9px; border-radius:99px; white-space:nowrap;
+  }
+  .badge.audio{background:var(--accent-soft); color:var(--accent-ink);}
+  .badge.roteiro{background:var(--accent2-soft); color:var(--accent2);}
+  .badge.pendente{background:var(--pending-soft); color:var(--pending);}
+
+  audio{width:100%; margin-top:10px; height:36px;}
+
+  .ep-actions{display:flex; align-items:center; justify-content:space-between; margin-top:10px; gap:10px;}
+  .ep-link{font-size:.8rem; color:var(--accent-ink); text-decoration:none; border-bottom:1px dashed var(--accent);}
+
+  .check-btn{
+    display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace;
+    font-size:.78rem; font-weight:600; border:1px solid var(--border); background:var(--surface-2);
+    color:var(--ink-muted); padding:6px 12px; border-radius:99px; cursor:pointer;
+  }
+  .check-btn.done{background:var(--done-soft); color:var(--done); border-color:var(--done);}
+  .check-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  footer{color:var(--ink-muted); font-size:.78rem; border-top:1px solid var(--border); padding-top:16px; margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>🎧 Painel de Podcast</h1>
+    <p>Toque, ouça, marque como ouvido. Progresso salvo neste celular/navegador.</p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-label"><span id="progressText">0 / 0 ouvidos</span><span id="progressPct">0%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div id="seasons"></div>
+
+  <footer>Painel estático (GitHub Pages) — sem servidor. Fonte: <span class="mono">podcast.md</span> na raiz do repositório.</footer>
+</div>
+
+<script>
+  var DATA = [
+    {
+      season: "Temporada 1 — Módulo 00: Lógica & Algoritmos",
+      folder: "00-logica-algoritmos/podcast/",
+      episodes: [
+        { id: "ep1", title: "Complexidade (Big O)", audio: "00-logica-algoritmos/podcast/ep1-big-o.m4a", roteiro: "00-logica-algoritmos/podcast/ep1-big-o.md" },
+        { id: "ep2", title: "Arrays, listas encadeadas, pilhas e filas", audio: "00-logica-algoritmos/podcast/ep2-arrays-pilhas-filas.m4a", roteiro: "00-logica-algoritmos/podcast/ep2-arrays-pilhas-filas.md" },
+        { id: "ep3", title: "Hash maps por dentro", audio: null, roteiro: "00-logica-algoritmos/podcast/ep3-hashmaps.md" },
+        { id: "ep4", title: "Recursão", audio: null, roteiro: "00-logica-algoritmos/podcast/ep4-recursao.md" },
+        { id: "ep5", title: "Busca binária", audio: null, roteiro: null },
+        { id: "ep6", title: "Two pointers & sliding window", audio: null, roteiro: null },
+        { id: "ep7", title: "Ordenação (a teoria que basta)", audio: null, roteiro: null }
+      ]
+    },
+    {
+      season: "Temporada 2 — Módulo 01: Backend & dados",
+      folder: "01-backend/ e 03-sql-dados/",
+      episodes: [
+        { id: "ep8", title: "REST de verdade: verbos, status codes e idempotência", audio: null, roteiro: null },
+        { id: "ep9", title: "JWT vs. sessão", audio: null, roteiro: null },
+        { id: "ep10", title: "SQL JOINs como diagrama de Venn", audio: null, roteiro: null },
+        { id: "ep11", title: "O problema N+1", audio: null, roteiro: null },
+        { id: "ep12", title: "ACID em 4 palavras", audio: null, roteiro: null },
+        { id: "ep13", title: "Pirâmide de testes", audio: null, roteiro: null }
+      ]
+    },
+    {
+      season: "Temporada 3 — Módulo 02: Frontend & arquitetura",
+      folder: "02-frontend/",
+      episodes: [
+        { id: "ep14", title: "Closures em JavaScript", audio: null, roteiro: null },
+        { id: "ep15", title: "Event loop", audio: null, roteiro: null },
+        { id: "ep16", title: "Regra dos hooks: topo e reto", audio: null, roteiro: null },
+        { id: "ep17", title: "useMemo vs useCallback", audio: null, roteiro: null },
+        { id: "ep18", title: "Virtual DOM e keys", audio: null, roteiro: null },
+        { id: "ep19", title: "CAP theorem", audio: null, roteiro: null },
+        { id: "ep20", title: "Cache, CDN e fila de mensagens", audio: null, roteiro: null },
+        { id: "ep21", title: "Estrutura de resposta de system design", audio: null, roteiro: null }
+      ]
+    },
+    {
+      season: "Temporada 4 — Módulo 07: Comportamental",
+      folder: "07-comportamental/",
+      episodes: [
+        { id: "ep22", title: "Método STAR", audio: null, roteiro: null },
+        { id: "ep23", title: "Por que quer sair do emprego atual", audio: null, roteiro: null },
+        { id: "ep24", title: "Perguntas pro entrevistador", audio: null, roteiro: null },
+        { id: "ep25", title: "Seu pitch: fullstack + IA aplicada", audio: null, roteiro: null }
+      ]
+    },
+    {
+      season: "Temporada bônus — Módulo 06: AWS CLF-C02",
+      folder: "06-aws/",
+      episodes: [
+        { id: "ep26", title: "Responsabilidade compartilhada", audio: null, roteiro: null },
+        { id: "ep27", title: "EC2, S3, RDS, Lambda", audio: null, roteiro: null },
+        { id: "ep28", title: "IAM: usuário, role, política", audio: null, roteiro: null },
+        { id: "ep29", title: "Billing: Free Tier, On-Demand, Reserved, Spot", audio: null, roteiro: null }
+      ]
+    }
+  ];
+
+  var STORAGE_KEY = "estudo-podcast-progress";
+  function loadProgress(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch(e){ return {}; }
+  }
+  function saveProgress(p){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch(e){}
+  }
+
+  var progress = loadProgress();
+  var seasonsEl = document.getElementById('seasons');
+  var totalEps = 0;
+
+  DATA.forEach(function(season){
+    var sEl = document.createElement('div');
+    sEl.className = 'season';
+    sEl.innerHTML = '<h2>'+season.season+' <span class="folder">'+season.folder+'</span></h2>';
+
+    season.episodes.forEach(function(ep){
+      totalEps++;
+      var status = ep.audio ? 'audio' : (ep.roteiro ? 'roteiro' : 'pendente');
+      var badgeText = status === 'audio' ? '🎧 áudio pronto' : (status === 'roteiro' ? '📝 roteiro pronto' : '⏳ pendente');
+
+      var epEl = document.createElement('div');
+      epEl.className = 'ep';
+      var isDone = !!progress[ep.id];
+
+      var html = '<div class="ep-top">' +
+        '<div class="ep-title"><span class="ep-num">'+ep.id.replace('ep','')+'.</span>'+ep.title+'</div>' +
+        '<span class="badge '+status+'">'+badgeText+'</span>' +
+        '</div>';
+
+      if (ep.audio) {
+        html += '<audio controls preload="none" src="'+ep.audio+'"></audio>';
+      }
+
+      html += '<div class="ep-actions">';
+      html += ep.roteiro ? '<a class="ep-link" href="'+ep.roteiro+'" target="_blank" rel="noopener">ver roteiro →</a>' : '<span></span>';
+      html += '<button class="check-btn'+(isDone?' done':'')+'" data-id="'+ep.id+'">'+(isDone?'✓ ouvido':'marcar ouvido')+'</button>';
+      html += '</div>';
+
+      epEl.innerHTML = html;
+      sEl.appendChild(epEl);
+    });
+
+    seasonsEl.appendChild(sEl);
+  });
+
+  function updateProgressBar(){
+    var done = Object.keys(progress).filter(function(k){ return progress[k]; }).length;
+    var pct = totalEps ? Math.round((done/totalEps)*100) : 0;
+    document.getElementById('progressText').textContent = done+' / '+totalEps+' ouvidos';
+    document.getElementById('progressPct').textContent = pct+'%';
+    document.getElementById('progressFill').style.width = pct+'%';
+  }
+
+  seasonsEl.addEventListener('click', function(e){
+    var btn = e.target.closest('.check-btn');
+    if (!btn) return;
+    var id = btn.dataset.id;
+    progress[id] = !progress[id];
+    saveProgress(progress);
+    btn.classList.toggle('done', !!progress[id]);
+    btn.textContent = progress[id] ? '✓ ouvido' : 'marcar ouvido';
+    updateProgressBar();
+  });
+
+  updateProgressBar();
+</script>
+</body>
+</html>
